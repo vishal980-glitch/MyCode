@@ -3,8 +3,11 @@ import maya.cmds as cmds
 def VNJntCtrl():
     cmds.duplicate(n = 'Test_Jnt_01')
     AllAt = cmds.listAttr('Test_Jnt_01',l =True)
-    for G in AllAt:
-        cmds.setAttr('Test_Jnt_01.'+G, l = 0)
+
+    if AllAt != None :
+        
+        for G in AllAt:
+            cmds.setAttr('Test_Jnt_01.'+G, l = 0)
         
     cmds.makeIdentity(a = True )
     spamS =cmds.getAttr('Test_Jnt_01.spans')
@@ -24,3 +27,5 @@ def VNJntCtrl():
         cmds.setAttr('Test_Crv_0'+str(j+1) + '.overrideColor', 18)
     
     cmds.delete('Test_Jnt_01')
+
+VNJntCtrl()
