@@ -17,14 +17,14 @@ def VNJntCtrl():
     for j in range(spamS):
         PostionP = cmds.getAttr('Test_Jnt_01.controlPoints['+str(j)+']')
         cmds.select(d = True)
-        cmds.joint(n = "Jnt_01",p = (PostionP[0][0],PostionP[0][1],PostionP[0][2]) )
-        cmds.circle(n = "Test_Crv_0"+str(j+1))
-        cmds.group(n = "Test_Crv_Grp_0"+str(j+1))
-        cmds.parentConstraint('Jnt_0'+str(j+1),'Test_Crv_Grp_0'+str(j+1), mo =0)
-        cmds.delete('Test_Crv_Grp_0'+str(j+1)+'_parentConstraint1')
-        cmds.parentConstraint('Test_Crv_0'+str(j+1),'Jnt_0'+str(j+1), mo =1)
-        cmds.setAttr('Test_Crv_0'+str(j+1) + '.overrideEnabled', 1)
-        cmds.setAttr('Test_Crv_0'+str(j+1) + '.overrideColor', 18)
+        cmds.joint(n = "Jnt_1",p = (PostionP[0][0],PostionP[0][1],PostionP[0][2]) )
+        cmds.circle(n = "Test_Crv_"+str(j+1))
+        cmds.group(n = "Test_Crv_Grp_"+str(j+1))
+        cmds.parentConstraint('Jnt_'+str(j+1),'Test_Crv_Grp_'+str(j+1), mo =0)
+        cmds.delete('Test_Crv_Grp_'+str(j+1)+'_parentConstraint1')
+        cmds.parentConstraint('Test_Crv_'+str(j+1),'Jnt_'+str(j+1), mo =1)
+        cmds.setAttr('Test_Crv_'+str(j+1) + '.overrideEnabled', 1)
+        cmds.setAttr('Test_Crv_'+str(j+1) + '.overrideColor', 18)
     
     cmds.delete('Test_Jnt_01')
 
