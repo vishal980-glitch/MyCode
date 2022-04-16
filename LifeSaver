@@ -1,0 +1,97 @@
+import maya.cmds as cmds
+import sys
+sys.path.append('D:/New_Learn/LifeSaver/source')
+
+list = cmds.getFileList( folder= "D:/New_Learn/LifeSaver/Note" )
+
+
+               
+def LifSaveCode():
+    if cmds.window( "LifeSaver", exists = True):
+        cmds.deleteUI ("LifeSaver" ,window=True)
+
+                
+    #if cmds.windowPref( "LifeSaver", exists = True):
+    #    cmds.windowPref ("LifeSaver" ,r=True)
+    
+    window2 = cmds.window("Life Saver", iconName='Short Name', widthHeight=(700, 700), s = False, bgc = (0.1,0.1,0.1) ) # entire Window
+    tabs = cmds.tabLayout(imw=5, imh=5)
+    child1 = cmds.columnLayout(adj=True, cat=('both', 15), rowSpacing=10, columnWidth=250 )# making button and etc in column
+    
+
+    cmds.separator( height=1, style='none' )
+    cmds.text( label='Save Code' ,align='center' )
+    cmds.textField('NewScriptName') 
+    cmds.scrollField('WriteNewScript', h =400, bgc = (0.8,0.72,0.1), )
+    collection1 = cmds.radioCollection()
+    rb2 = cmds.radioButton('Mel' )
+    rb1 = cmds.radioButton('Python' )
+    rb3 = cmds.radioButton('Text' )
+    
+    cmds.radioCollection( collection1, edit=True, select=rb2 )
+    cmds.button( label='Add To Dir',align='center', command = 'SaveFile(),AddToDir()', bgc = (0.5,0.6,0.8) )
+    cmds.setParent( '..' )
+
+    child2 = cmds.columnLayout(adj=True, cat=('both', 15), rowSpacing=10, columnWidth=250 )
+    cmds.separator()
+    WrittenTextField = cmds.textField('SearchBox') 
+    cmds.button( label='Search',align='center', command = 'SearchSelected()', bgc = (0.5,0.6,0.8))
+    cmds.textScrollList("FullList", append=[], ra = True )
+    for i in list:
+        cmds.textScrollList("FullList", append=[i], e = True)
+    
+    cmds.button( label='Open',align='center', command = 'OpenScriptWindow()', bgc = (0.5,0.6,0.8) )
+    cmds.setParent( '..' )
+    
+    cmds.tabLayout( tabs, edit=True, tabLabel=((child1, 'SAVE'), (child2, 'SEARCH')) )
+    cmds.showWindow( window2 )
+    
+def AddToDir():
+    NewList = cmds.getFileList( folder= "D:/New_Learn/LifeSaver/Note/" )
+    for i in NewList:
+        cmds.textScrollList("FullList",ra = True, e = True)
+    for i in NewList:
+        cmds.textScrollList("FullList", append=[i], e = True)
+              
+
+
+def SearchSelected():
+    SearchName = cmds.textField('SearchBox', q=True, text=True)
+    AllList = cmds.getFileList( folder= "D:/New_Learn/LifeSaver/Note/", filespec= '*'+SearchName+'*' )
+    
+    for i in AllList:
+        cmds.textScrollList("FullList",ra = True, e = True)
+    for i in AllList:
+        cmds.textScrollList("FullList", append=[i], e = True)
+        
+
+        
+def OpenScriptWindow():
+    with open("D:/New_Learn/LifeSaver/Note/"+(cmds.textScrollList("FullList",si = True , q = True))[0], 'r') as f:
+        lines = f.read()
+    if cmds.window( "Script", exists = True):
+        cmds.deleteUI ("Script" ,window= True)
+    
+    ScriptWin = cmds.window("Script", iconName='Short Name', widthHeight=(700, 700), s = False, bgc = (0.1,0.3,0.0) )
+    cmds.columnLayout(adjustableColumn=True, rowSpacing=10, columnWidth=250 )
+    cmds.scrollField('ScriptBoard',tx = lines, ed =False, w =700, h =  700 )
+    cmds.showWindow( ScriptWin )
+    
+def SaveFile():
+    ButtonMel = cmds.radioButton('Mel',sl = True, q = True )
+    ButtonPy = cmds.radioButton('Python',sl = True, q = True )
+    ButtonTx = cmds.radioButton('Text',sl = True, q = True )
+    if ButtonMel == True:
+        db = '.mel'
+        Paths = "Mel/"
+    if ButtonPy == True:
+        db = '.py'
+        Paths = "Python/"
+    if ButtonTx == True:
+        db = '.txt'
+        Paths = "Note/"
+        
+    with open("D:/New_Learn/LifeSaver/"+Paths+(cmds.textField('NewScriptName', q=True, text=True))+db, 'w') as f:
+        f.write(cmds.scrollField('WriteNewScript', q=True, text=True))
+
+LifSaveCode()
